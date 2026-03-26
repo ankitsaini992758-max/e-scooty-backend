@@ -121,6 +121,7 @@ export const getProfitStats = async (req, res) => {
       {
         $group: {
           _id: null,
+          totalInvestment: { $sum: '$actualPrice' },
           totalProfit: { $sum: '$profit' },
           totalCount: { $sum: 1 },
           avgProfit: { $avg: '$profit' },
@@ -133,6 +134,7 @@ export const getProfitStats = async (req, res) => {
       {
         $group: {
           _id: '$month',
+          totalInvestment: { $sum: '$actualPrice' },
           totalProfit: { $sum: '$profit' },
           count: { $sum: 1 },
           avgProfit: { $avg: '$profit' },
@@ -146,7 +148,12 @@ export const getProfitStats = async (req, res) => {
     res.status(200).json({
       success: true,
       data: {
-        overall: overallStats[0] || { totalProfit: 0, totalCount: 0, avgProfit: 0 },
+        overall: overallStats[0] || {
+          totalInvestment: 0,
+          totalProfit: 0,
+          totalCount: 0,
+          avgProfit: 0,
+        },
         byMonth: monthlyStats,
       },
     });
